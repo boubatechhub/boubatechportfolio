@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /boubadev
+
+Sitemap: https://boubacartraore.fr/sitemap.xml

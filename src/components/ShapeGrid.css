@@ -1,0 +1,19 @@
+.shapegrid-canvas {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: flex;
+}
+
+.site-shape-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-color: #ffffff;
+  pointer-events: none;
+}
+
+.site-shape-grid .shapegrid-canvas {
+  pointer-events: none;
+  opacity: 0.5;
+}

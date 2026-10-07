@@ -1,0 +1,20 @@
+import { motion, useScroll, useSpring } from "motion/react";
+import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
+
+export function ScrollProgress() {
+  const reduceMotion = usePrefersReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
+  return (
+    <motion.div
+      className="fixed left-0 right-0 top-0 z-[60] h-0.5 origin-left bg-brand-orange"
+      style={reduceMotion ? { scaleX: scrollYProgress } : { scaleX }}
+      aria-hidden
+    />
+  );
+}
