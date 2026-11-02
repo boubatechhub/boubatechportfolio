@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { ExternalLink, ArrowRight, Github, Figma, Code2 } from "lucide-react";
 import { Project, Education, Experience } from "../types";
 import { Badge } from "./UI";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { getCodeRepoMeta, getDirectImageUrl } from "../utils";
 
 const projectImageSrc = (imageUrl: string) => {
@@ -412,14 +413,23 @@ export const ExperienceItem: React.FC<{
   experience: Experience;
   index: number;
 }> = ({ experience, index }) => {
+  const reduceMotion = usePrefersReducedMotion();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      className="portfolio-card h-full rounded-2xl border border-white/5 p-6 transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-brand-orange/20 sm:p-8 xl:p-10"
+      viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+      transition={{ duration: 0.8, delay: index * 0.12, ease: [0.23, 1, 0.32, 1] }}
+      className="portfolio-card relative h-full overflow-hidden rounded-2xl border border-white/5 p-6 transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-brand-orange/20 sm:p-8 xl:p-10"
     >
+      <motion.span
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-[3px] origin-left bg-brand-orange"
+        initial={reduceMotion ? false : { scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.1, delay: 0.25 + index * 0.12, ease: [0.23, 1, 0.32, 1] }}
+      />
       <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
         <div>
           <h3 className="text-lg md:text-xl font-display font-medium text-white">
