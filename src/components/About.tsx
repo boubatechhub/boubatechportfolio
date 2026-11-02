@@ -96,11 +96,9 @@ type AboutProps = {
 
 function SectionBadge({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-4 flex items-center gap-2 font-mono text-caption-sm uppercase tracking-[0.22em] text-brand-orange">
-      <span
-        className="inline-block h-1.5 w-1.5 rounded-full bg-brand-orange"
-        aria-hidden
-      />
+    <p className="mb-5 flex items-center gap-3 font-mono text-caption-sm uppercase tracking-[0.18em] text-white/50 md:mb-6">
+      <span className="section-index tabular-nums" aria-hidden />
+      <span className="h-px w-8 bg-white/20" aria-hidden />
       {children}
     </p>
   );
@@ -132,8 +130,11 @@ export function About({ settings }: AboutProps) {
       <div className="relative z-10 space-y-16 md:space-y-20 xl:space-y-24">
         <Reveal>
           <SectionBadge>À propos</SectionBadge>
-          <h2 className="max-w-4xl font-display text-3xl font-semibold leading-[1.12] tracking-tight text-white sm:text-4xl md:text-5xl xl:text-display-md">
-            Un profil hybride, une vision stratégique.
+          <h2 className="max-w-4xl font-display text-4xl font-medium leading-[1.02] tracking-[-0.035em] text-white md:text-5xl lg:text-6xl xl:text-[4.25rem]">
+            Un profil hybride,{" "}
+            <span className="font-serif-accent text-brand-orange">
+              une vision produit.
+            </span>
           </h2>
         </Reveal>
 
@@ -173,13 +174,10 @@ export function About({ settings }: AboutProps) {
 
           <Reveal delay={0.1}>
             <article
-              className={`${CARD_SURFACE} flex h-full flex-col gap-8 p-6 sm:p-8`}
+              className={`${CARD_SURFACE} flex h-full flex-col gap-6 rounded-[1.5rem] p-6 sm:p-9`}
             >
               <div className="space-y-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-brand-orange/25 bg-brand-orange/10 text-brand-orange">
-                  <Zap size={22} aria-hidden />
-                </div>
-                <h3 className="font-display text-2xl font-semibold text-white md:text-3xl">
+                <h3 className="font-display text-2xl font-medium tracking-[-0.025em] text-white md:text-3xl">
                   Ma valeur ajoutée
                 </h3>
                 <p className="max-w-md text-sm leading-relaxed text-white/55 md:text-base">
@@ -188,11 +186,11 @@ export function About({ settings }: AboutProps) {
                 </p>
               </div>
 
-              <ul className="space-y-2">
+              <ul className="divide-y divide-white/[0.07] border-t border-white/[0.07]">
                 {VALUE_POINTS.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-3 px-1 py-2"
+                    className="flex items-start gap-3 py-3"
                   >
                     <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-orange/15 text-brand-orange">
                       <Check size={12} strokeWidth={3} aria-hidden />
@@ -208,16 +206,11 @@ export function About({ settings }: AboutProps) {
         </div>
 
         <Reveal>
-          <div className="grid grid-cols-2 gap-x-6 gap-y-8 border-y border-white/10 py-8 lg:grid-cols-4 lg:gap-8">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 border-y border-white/10 py-10 lg:grid-cols-4 lg:gap-8 lg:divide-x lg:divide-white/10 [&>*]:lg:pl-8 [&>*:first-child]:lg:pl-0">
             {STATS.map((stat) => (
               <div key={stat.label} className="flex flex-col gap-3">
-                <stat.icon
-                  size={20}
-                  className="text-brand-orange/80"
-                  aria-hidden
-                />
                 <div>
-                  <p className="font-display text-3xl font-semibold tracking-tight text-white md:text-4xl">
+                  <p className="font-display text-5xl font-medium tabular-nums tracking-[-0.045em] text-white md:text-6xl">
                     {stat.value}
                   </p>
                   <p className="mt-1 font-mono text-2xs uppercase tracking-widest text-white/45 md:text-caption-sm">
@@ -230,23 +223,33 @@ export function About({ settings }: AboutProps) {
         </Reveal>
 
         <Reveal>
-          <h3 className="font-display text-2xl font-semibold text-white md:text-3xl xl:text-4xl">
-            Travailler avec moi ?
-          </h3>
-          <div className="mt-8 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-            {DIFFERENTIATORS.map((item) => (
-              <article key={item.title} className="portfolio-card group rounded-xl border border-white/10 p-5">
-                <div className="mb-3 text-brand-orange">
-                  <item.icon size={20} aria-hidden />
-                </div>
-                <h4 className="font-display text-lg font-medium text-white">
-                  {item.title}
-                </h4>
-                <p className="mt-2 text-sm leading-relaxed text-white/55">
-                  {item.description}
-                </p>
-              </article>
-            ))}
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+            <h3 className="font-display text-3xl font-medium tracking-[-0.03em] text-white md:text-4xl lg:col-span-4">
+              Pourquoi{" "}
+              <span className="font-serif-accent text-brand-orange">
+                travailler avec moi
+              </span>
+            </h3>
+            <ol className="grid grid-cols-1 gap-x-10 sm:grid-cols-2 lg:col-span-8">
+              {DIFFERENTIATORS.map((item, i) => (
+                <li
+                  key={item.title}
+                  className="group flex gap-5 border-t border-white/10 py-6"
+                >
+                  <span className="pt-1 font-mono text-xs tabular-nums text-brand-orange">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h4 className="font-display text-lg font-medium tracking-[-0.015em] text-white">
+                      {item.title}
+                    </h4>
+                    <p className="mt-1.5 max-w-sm text-[0.95rem] leading-relaxed text-white/55">
+                      {item.description}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
         </Reveal>
       </div>
