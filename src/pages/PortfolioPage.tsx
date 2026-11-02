@@ -11,6 +11,8 @@ import { Navbar } from "../components/layout/Navbar";
 import { ScrollProgress } from "../components/layout/ScrollProgress";
 import { SiteShapeGridBackground } from "../components/SiteShapeGridBackground";
 import { ProjectsDiscovery } from "../components/ProjectsDiscovery";
+import { ProjectsStack } from "../components/ProjectsStack";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { SkillsSection } from "../components/SkillsSection";
 import { Section } from "../components/UI";
 import { usePortfolioData } from "../hooks/usePortfolioData";
@@ -20,6 +22,7 @@ import type { ContentWork } from "../types";
 
 export function PortfolioPage() {
   const navigate = useNavigate();
+  const reduceMotion = usePrefersReducedMotion();
   const {
     projects,
     loading: projectsLoading,
@@ -42,7 +45,7 @@ export function PortfolioPage() {
     const selected = projects.filter((project) => project.isFeatured);
     const selectedIds = new Set(selected.map((project) => project.id));
     const remaining = projects.filter((project) => !selectedIds.has(project.id));
-    return [...selected, ...remaining].slice(0, 4);
+    return [...selected, ...remaining].slice(0, 6);
   }, [projects]);
 
   return (
@@ -91,10 +94,17 @@ export function PortfolioPage() {
                 Aucun projet publié pour le moment.
               </p>
             ) : (
-              <ProjectsDiscovery
-                projects={featuredProjects}
-                onOpen={(project) => navigate(getProjectPath(project))}
-              />
+              reduceMotion ? (
+                <ProjectsDiscovery
+                  projects={featuredProjects.slice(0, 4)}
+                  onOpen={(project) => navigate(getProjectPath(project))}
+                />
+              ) : (
+                <ProjectsStack
+                  projects={featuredProjects}
+                  onOpen={(project) => navigate(getProjectPath(project))}
+                />
+              )
             )}
             {!projectsLoading && !projectsError && projects.length > 0 ? (
               <div className="mt-12 flex justify-start">
