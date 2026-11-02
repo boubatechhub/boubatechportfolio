@@ -65,27 +65,50 @@ function SkillIcon({ skill, className }: { skill: Skill; className: string }) {
   );
 }
 
+/** Taille relative des lignes éloignées du centre (la ligne active vaut 1). */
+const MIN_SCALE = 0.4;
+
+/** Échelle d'une ligne selon sa distance au centre : grande au centre, petite ailleurs. */
+function scaleAt(d: number): number {
+  return 1 - (1 - MIN_SCALE) * Math.min(Math.abs(d), 1);
+}
+
+/**
+ * Position du centre d'une ligne par rapport au centre de la zone, en hauteurs de ligne.
+ * Intègre l'échelle pour que les petites lignes se resserrent (pas de grands vides).
+ */
+function offsetAt(x: number): number {
+  const a = Math.abs(x);
+  const k = 1 - MIN_SCALE;
+  const v = a <= 1 ? a - (k * a * a) / 2 : 1 - k / 2 + MIN_SCALE * (a - 1);
+  return Math.sign(x) * v;
+}
+
 function ScrollRow({
   row,
   index,
   progress,
+  rowH,
 }: {
   row: Row;
   index: number;
   progress: MotionValue<number>;
+  rowH: number;
 }) {
-  // Distance à la ligne active : 0 = au centre, en foncé.
+  // Distance à la ligne active : 0 = au centre, en grand et en foncé.
   const opacity = useTransform(progress, (p) => {
     const d = Math.abs(index - p);
     if (d < 0.5) return 1;
-    return Math.max(0.16, 0.62 - (d - 0.5) * 0.14);
+    return Math.max(0.2, 0.7 - (d - 0.5) * 0.12);
   });
+  const scale = useTransform(progress, (p) => scaleAt(index - p));
+  const y = useTransform(progress, (p) => offsetAt(index - p) * rowH - rowH / 2);
 
   if (row.kind === 'group') {
     return (
       <motion.li
-        style={{ opacity }}
-        className="flex h-[var(--skill-row)] items-center"
+        style={{ opacity, y }}
+        className="absolute inset-x-0 top-1/2 flex h-[var(--skill-row)] items-center"
       >
         <span className="flex items-center gap-3 font-mono text-[clamp(0.7rem,1.1vw,0.85rem)] uppercase tracking-[0.18em] text-brand-orange">
           <span className="tabular-nums">
@@ -101,8 +124,8 @@ function ScrollRow({
 
   return (
     <motion.li
-      style={{ opacity }}
-      className="flex h-[var(--skill-row)] items-center gap-[0.35em] font-display text-[length:var(--skill-font)] font-semibold leading-none tracking-[-0.04em] text-[#1a1814]"
+      style={{ opacity, y, scale }}
+      className="absolute inset-x-0 top-1/2 flex h-[var(--skill-row)] origin-left items-center gap-[0.35em] will-change-transform font-display text-[length:var(--skill-font)] font-semibold leading-none tracking-[-0.04em] text-[#1a1814]"
     >
       <SkillIcon skill={row.skill} className="size-[0.85em] shrink-0" />
       <span className="truncate">{row.skill.name}</span>
@@ -142,7 +165,6 @@ function SkillsScroller({ groups }: { groups: SkillGroup[] }) {
   const progress = useTransform(scrollYProgress, (v) =>
     stepped(1 + v * (rows.length - 2)),
   );
-  const listY = useTransform(progress, (p) => -p * rowH);
 
   const [active, setActive] = useState(1);
   useMotionValueEvent(progress, 'change', (p) => {
@@ -193,9 +215,8 @@ function SkillsScroller({ groups }: { groups: SkillGroup[] }) {
         {/* Liste qui défile, ligne active centrée verticalement */}
         <div className="relative h-full min-w-0 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_22%,black_78%,transparent)] md:col-span-8 lg:col-span-9">
           <div ref={rowRef} className="invisible absolute h-[var(--skill-row)]" aria-hidden />
-          <motion.ul
-            style={{ y: listY }}
-            className="absolute inset-x-0 top-[calc(50%-var(--skill-row)/2)] will-change-transform"
+          <ul
+            className="absolute inset-0"
             aria-label="Compétences par catalogue"
           >
             {rows.map((row, i) => (
@@ -204,9 +225,10 @@ function SkillsScroller({ groups }: { groups: SkillGroup[] }) {
                 row={row}
                 index={i}
                 progress={progress}
+                rowH={rowH}
               />
             ))}
-          </motion.ul>
+          </ul>
         </div>
       </div>
     </div>

@@ -15,6 +15,13 @@ import {
 } from "lucide-react";
 import type { Settings } from "../types";
 import { Section } from "./UI";
+import {
+  CountUp,
+  DrawLine,
+  MaskReveal,
+  Stagger,
+  StaggerItem,
+} from "./Reveal";
 
 const CARD_SURFACE =
   "portfolio-card rounded-2xl border border-white/20 bg-white/[0.04] transition-[border-color,background-color,transform] duration-300";
@@ -98,7 +105,7 @@ function SectionBadge({ children }: { children: React.ReactNode }) {
   return (
     <p className="mb-5 flex items-center gap-3 font-mono text-caption-sm uppercase tracking-[0.18em] text-white/50 md:mb-6">
       <span className="section-index tabular-nums" aria-hidden />
-      <span className="h-px w-8 bg-white/20" aria-hidden />
+      <DrawLine className="h-px w-8 bg-white/20" />
       {children}
     </p>
   );
@@ -131,10 +138,12 @@ export function About({ settings }: AboutProps) {
         <Reveal>
           <SectionBadge>À propos</SectionBadge>
           <h2 className="max-w-4xl font-display text-4xl font-medium leading-[1.02] tracking-[-0.035em] text-white md:text-5xl lg:text-6xl xl:text-[4.25rem]">
-            Un profil hybride,{" "}
-            <span className="font-serif-accent text-brand-orange">
-              une vision produit.
-            </span>
+            <MaskReveal delay={0.08}>
+              Un profil hybride,{" "}
+              <span className="font-serif-accent text-brand-orange">
+                une vision produit.
+              </span>
+            </MaskReveal>
           </h2>
         </Reveal>
 
@@ -186,9 +195,14 @@ export function About({ settings }: AboutProps) {
                 </p>
               </div>
 
-              <ul className="divide-y divide-white/[0.07] border-t border-white/[0.07]">
+              <Stagger
+                as="ul"
+                gap={0.08}
+                className="divide-y divide-white/[0.07] border-t border-white/[0.07]"
+              >
                 {VALUE_POINTS.map((item) => (
-                  <li
+                  <StaggerItem
+                    as="li"
                     key={item}
                     className="flex items-start gap-3 py-3"
                   >
@@ -198,28 +212,31 @@ export function About({ settings }: AboutProps) {
                     <span className="text-sm leading-relaxed text-white/80 md:text-body-md">
                       {item}
                     </span>
-                  </li>
+                  </StaggerItem>
                 ))}
-              </ul>
+              </Stagger>
             </article>
           </Reveal>
         </div>
 
         <Reveal>
-          <div className="grid grid-cols-2 gap-x-6 gap-y-10 border-y border-white/10 py-10 lg:grid-cols-4 lg:gap-8 lg:divide-x lg:divide-white/10 [&>*]:lg:pl-8 [&>*:first-child]:lg:pl-0">
+          <Stagger
+            gap={0.1}
+            className="grid grid-cols-2 gap-x-6 gap-y-10 border-y border-white/10 py-10 lg:grid-cols-4 lg:gap-8 lg:divide-x lg:divide-white/10 [&>*]:lg:pl-8 [&>*:first-child]:lg:pl-0"
+          >
             {STATS.map((stat) => (
-              <div key={stat.label} className="flex flex-col gap-3">
+              <StaggerItem key={stat.label} className="flex flex-col gap-3">
                 <div>
                   <p className="font-display text-5xl font-medium tabular-nums tracking-[-0.045em] text-white md:text-6xl">
-                    {stat.value}
+                    <CountUp value={stat.value} />
                   </p>
                   <p className="mt-1 font-mono text-2xs uppercase tracking-widest text-white/45 md:text-caption-sm">
                     {stat.label}
                   </p>
                 </div>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </Reveal>
 
         <Reveal>
@@ -230,9 +247,14 @@ export function About({ settings }: AboutProps) {
                 travailler avec moi
               </span>
             </h3>
-            <ol className="grid grid-cols-1 gap-x-10 sm:grid-cols-2 lg:col-span-8">
+            <Stagger
+              as="ol"
+              gap={0.08}
+              className="grid grid-cols-1 gap-x-10 sm:grid-cols-2 lg:col-span-8"
+            >
               {DIFFERENTIATORS.map((item, i) => (
-                <li
+                <StaggerItem
+                  as="li"
                   key={item.title}
                   className="group flex gap-5 border-t border-white/10 py-6"
                 >
@@ -247,9 +269,9 @@ export function About({ settings }: AboutProps) {
                       {item.description}
                     </p>
                   </div>
-                </li>
+                </StaggerItem>
               ))}
-            </ol>
+            </Stagger>
           </div>
         </Reveal>
       </div>
