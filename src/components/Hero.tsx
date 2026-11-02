@@ -2,8 +2,8 @@ import { useMemo } from "react";
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { CrashText } from "./CrashText";
-//import DotGrid from "./DotGrid";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+import { CONTACT_DETAILS } from "../constants";
 import { PAGE_CONTAINER_CLASS } from "../layout";
 import type { Settings } from "../types";
 import { Button } from "./UI";
@@ -35,7 +35,6 @@ export function Hero({
     settings.name && settings.name !== "BT." ? settings.name : HERO_FULL_NAME;
 
   const reduceMotion = usePrefersReducedMotion();
-  const subline = useMemo(() => "", []);
 
   const marqueeItems = useMemo(() => {
     const cleaned = stacks
@@ -49,109 +48,130 @@ export function Hero({
     return cleaned;
   }, [stacks]);
 
+  const [firstName, ...rest] = displayName.split(" ");
+  const lastName = rest.join(" ");
+
+  const scrollTo = (id: string) =>
+    document
+      .getElementById(id)
+      ?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+
+  const fade = (delay: number) =>
+    reduceMotion
+      ? {}
+      : {
+          initial: { opacity: 0, transform: "translateY(16px)" },
+          animate: { opacity: 1, transform: "translateY(0px)" },
+          transition: { duration: 0.7, delay, ease: [0.23, 1, 0.32, 1] as const },
+        };
+
   return (
-    <motion.section
+    <section
       id="accueil"
-      className="portfolio-section portfolio-section--hero relative mx-3 my-3 flex min-h-screen flex-col items-center justify-center overflow-hidden rounded-[10px] border border-black/[0.06] bg-black pt-28 sm:mx-4 sm:my-4 xl:mx-6"
-      initial={
-        reduceMotion
-          ? false
-          : { opacity: 0, transform: "translateY(14px)" }
-      }
-      whileInView={{ opacity: 1, transform: "translateY(0px)" }}
-      viewport={{ once: true }}
-      transition={{
-        duration: reduceMotion ? 0.18 : 0.6,
-        ease: [0.23, 1, 0.32, 1],
-      }}
+      className="portfolio-section portfolio-section--hero relative flex min-h-[100dvh] flex-col justify-end overflow-hidden pb-10 pt-32 md:pb-14 md:pt-40"
     >
-      <div className="absolute inset-0 z-0 bg-black">
-        {/* <DotGrid
-          dotSize={8}
-          gap={60}
-          baseColor="#0c0c0b"
-          activeColor="#A97319"
-          proximity={100}
-          shockRadius={200}
-          shockStrength={9}
-          resistance={950}
-          returnDuration={3.5}
-        /> */}
-      </div>
+      <div className={`relative z-10 ${PAGE_CONTAINER_CLASS} w-full`}>
+        <motion.p
+          {...fade(0)}
+          className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-[#fffefb]/70 py-1.5 pl-2.5 pr-4 text-sm text-white/70 backdrop-blur-sm md:mb-10"
+        >
+          <span className="relative flex h-2 w-2" aria-hidden>
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500/50 motion-reduce:animate-none" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-600" />
+          </span>
+          Disponible pour une alternance
+        </motion.p>
 
-      <div
-        className={`relative z-10 ${PAGE_CONTAINER_CLASS} flex w-full flex-col items-center`}
-      >
-        <div className="w-full max-w-5xl text-center">
-          <p className="mb-4 font-mono text-caption-sm uppercase tracking-[0.22em] text-white/55">
-            {displayName} · Développeur Web / Mobile & UI/UX
-          </p>
-
-          <h1 className="relative mx-auto mb-0 mt-0 w-full max-w-5xl px-4 py-0 font-display text-3xl font-semibold leading-[1.08] tracking-tight text-white sm:px-6 sm:text-4xl md:text-5xl xl:text-6xl 2xl:text-7xl">
-            <span
-              className="pointer-events-none block select-none opacity-0"
-              aria-hidden="true"
+        <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12 lg:gap-12">
+          <div className="lg:col-span-8">
+            <motion.h1
+              {...fade(0.08)}
+              className="font-display text-[clamp(3.5rem,16vw,9.5rem)] font-semibold leading-[0.9] tracking-[-0.055em] text-white"
             >
-              {HERO_HEADLINE_RESERVE}
-            </span>
-            <span className="absolute inset-0 flex items-center justify-center px-4 sm:px-6">
-              <CrashText
-                texts={HERO_HEADLINES}
-                interval={4000}
-                className="block w-full text-center"
-              />
-            </span>
-          </h1>
-
-          {subline ? (
-            <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-white/60 sm:text-lg xl:text-xl">
-              {subline}
-            </p>
-          ) : null}
-
-          <div className="mx-auto mt-10 flex w-full max-w-xl flex-col items-stretch justify-center gap-3 sm:mt-10 sm:flex-row sm:gap-4">
-            <Button
-              onClick={() =>
-                document
-                  .getElementById("projets")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="w-full justify-center sm:w-auto"
-            >
-              Voir mes projets <ArrowRight size={18} />
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() =>
-                document
-                  .getElementById("contact")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="w-full justify-center sm:w-auto"
-            >
-              Me contacter
-            </Button>
-          </div>
-
-          <div className="mx-auto mt-10 w-full max-w-5xl">
-            <div className="marquee rounded-2xl border border-white/10 bg-white/[0.03] py-3 shadow-2xl shadow-black/30">
-              <div className="marquee-track" aria-label="Technologies">
-                {[...marqueeItems, ...marqueeItems].map((label, i) => (
-                  <span
-                    key={`${label}-${i}`}
-                    className="mx-1.5 inline-flex items-center rounded-full border border-white/10 bg-black/20 px-3 py-1 font-mono text-caption-sm uppercase tracking-wider text-white/60"
-                  >
-                    {label}
+              {firstName}
+              {lastName ? (
+                <>
+                  <br />
+                  <span className="font-serif-accent text-[1.08em] tracking-[-0.03em] text-brand-orange">
+                    {lastName}
                   </span>
-                ))}
-              </div>
-            </div>
-            <p className="mt-3 text-center font-mono text-2xs uppercase tracking-[0.22em] text-white/35">
-              Stack & outils utilisés sur mes projets
-            </p>
+                </>
+              ) : null}
+            </motion.h1>
+
+            <motion.div
+              {...fade(0.18)}
+              className="relative mt-8 max-w-2xl text-xl leading-snug tracking-[-0.015em] text-white/70 md:mt-10 md:text-2xl"
+            >
+              <span
+                className="pointer-events-none block select-none opacity-0"
+                aria-hidden="true"
+              >
+                {HERO_HEADLINE_RESERVE}
+              </span>
+              <span className="absolute inset-0">
+                <CrashText texts={HERO_HEADLINES} interval={4500} />
+              </span>
+            </motion.div>
+
+            <motion.div
+              {...fade(0.26)}
+              className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4"
+            >
+              <Button
+                onClick={() => scrollTo("projets")}
+                className="w-full sm:w-auto"
+              >
+                Voir mes projets <ArrowRight size={18} aria-hidden />
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => scrollTo("contact")}
+                className="w-full sm:w-auto"
+              >
+                Me contacter
+              </Button>
+            </motion.div>
           </div>
+
+          <motion.dl
+            {...fade(0.34)}
+            className="grid grid-cols-2 gap-x-6 gap-y-5 border-t border-white/10 pt-6 text-sm lg:col-span-4 lg:grid-cols-1 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"
+          >
+            {[
+              ["Rôle", "Développeur Web / Mobile & UI/UX"],
+              ["Basé à", CONTACT_DETAILS.location],
+              ["Recherche", "Alternance — développement full stack"],
+            ].map(([term, value]) => (
+              <div key={term} className="last:col-span-2 lg:last:col-span-1">
+                <dt className="font-mono text-2xs uppercase tracking-[0.18em] text-white/45">
+                  {term}
+                </dt>
+                <dd className="mt-1.5 font-medium leading-snug text-white/85">
+                  {value}
+                </dd>
+              </div>
+            ))}
+          </motion.dl>
         </div>
+
+        <motion.div {...fade(0.42)} className="mt-14 md:mt-20">
+          <div className="marquee border-y border-white/10 py-4">
+            <div className="marquee-track" aria-label="Technologies utilisées">
+              {[...marqueeItems, ...marqueeItems].map((label, i) => (
+                <span
+                  key={`${label}-${i}`}
+                  className="mx-5 inline-flex items-center gap-5 font-mono text-xs uppercase tracking-[0.14em] text-white/55"
+                  aria-hidden={i >= marqueeItems.length}
+                >
+                  {label}
+                  <span className="h-1 w-1 rounded-full bg-brand-orange/60" aria-hidden />
+                </span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }

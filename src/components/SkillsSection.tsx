@@ -144,8 +144,8 @@ export function SkillsSection({ groups }: SkillsSectionProps) {
     return (
       <Section
         id="compétences"
-        subtitle="Expertise"
-        title="Compétences & Technologies"
+        subtitle="Compétences"
+        title="Compétences & technologies"
       >
         <p className="font-mono text-sm text-white/40">
           Aucune compétence à afficher.
@@ -161,8 +161,15 @@ export function SkillsSection({ groups }: SkillsSectionProps) {
   return (
     <Section
       id="compétences"
-      subtitle="Expertise"
-      title="Compétences & Technologies"
+      subtitle="Compétences"
+      title={
+        <>
+          Compétences{" "}
+          <span className="font-serif-accent text-brand-orange">
+            &amp; technologies
+          </span>
+        </>
+      }
     >
       <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-2 lg:gap-5 xl:gap-6 2xl:gap-8">
         <div className="flex flex-col gap-4">

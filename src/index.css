@@ -1,17 +1,19 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  --color-brand-orange: #f27d26;
+  /* Un seul accent, légèrement désaturé pour cohabiter avec les neutres chauds. */
+  --color-brand-orange: #e2691f;
   --color-brand-blue: #007aff;
-  --color-bg-page: #ffffff;
-  --color-ink-light: #171717;
-  --color-white: #171717;
-  --color-black: #ffffff;
+  --color-bg-page: #f7f5f1;
+  --color-ink-light: #1a1814;
+  /* Thème inversé historique : « white » = encre, « black » = fond. */
+  --color-white: #1a1814;
+  --color-black: #f7f5f1;
 
   /* Typographie en rem (base html = 100% → 1rem = 16px) */
   --text-micro: 0.5rem;
@@ -38,6 +40,15 @@
   html {
     font-size: 100%;
     overflow-x: clip;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    background-color: #f7f5f1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   body {
@@ -57,15 +68,25 @@
   h5,
   h6 {
     @apply font-display tracking-tight;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-orange);
+    outline-offset: 3px;
   }
 }
 
 .bg-white {
-  background-color: #ffffff !important;
+  background-color: #fffefb !important;
 }
 
 .text-black {
-  color: #171717 !important;
+  color: #1a1814 !important;
 }
 
 .site-button {
@@ -79,19 +100,19 @@
 
 .site-button:hover:not(:disabled) {
   transform: translateY(-1px);
-  border-color: #f27d26 !important;
-  background-color: #171717 !important;
-  color: #ffffff !important;
-  box-shadow: 0 6px 18px rgb(242 125 38 / 18%);
+  border-color: #1a1814 !important;
+  background-color: #1a1814 !important;
+  color: #fffefb !important;
+  box-shadow: 0 10px 24px -10px rgb(122 58 16 / 45%);
 }
 
 .site-button:active:not(:disabled) {
   transform: translateY(0) scale(0.985);
-  box-shadow: 0 2px 8px rgb(242 125 38 / 14%);
+  box-shadow: 0 2px 8px -4px rgb(122 58 16 / 30%);
 }
 
 .site-button:focus-visible {
-  outline: 2px solid #f27d26;
+  outline: 2px solid var(--color-brand-orange);
   outline-offset: 3px;
 }
 
@@ -137,90 +158,94 @@
   background-color: rgb(255 255 255 / 95%) !important;
 }
 
+/* ── Sections : un seul fond continu, séparées par un filet ─────────────── */
 .portfolio-section {
-  --portfolio-card-bg: #fffdf9;
-  --portfolio-card-border: rgb(23 23 23 / 12%);
-  --portfolio-card-hover: #fff4e8;
-  --portfolio-card-inset: #fff4e8;
-  margin: 0.75rem;
-  overflow: hidden;
-  border: 1px solid rgb(23 23 23 / 10%);
-  border-radius: 10px;
-  background-color: #fffaf3;
+  --portfolio-card-bg: #fffefb;
+  --portfolio-card-border: rgb(26 24 20 / 8%);
+  --portfolio-card-hover: #ffffff;
+  --portfolio-card-inset: #f3efe8;
+  position: relative;
+  background-color: transparent;
 }
 
-.portfolio-section--hero {
-  background-color: #fff5e8;
+main.portfolio-content {
+  counter-reset: portfolio-section;
 }
 
-.portfolio-section[data-surface="projets"] {
-  --portfolio-card-bg: #fffdfb;
-  --portfolio-card-border: rgb(242 125 38 / 28%);
-  --portfolio-card-hover: #fff3e7;
-  --portfolio-card-inset: #fff4e9;
-  background-color: #fff6ec;
+main.portfolio-content > .portfolio-section:not(.portfolio-section--hero) {
+  border-top: 1px solid rgb(26 24 20 / 9%);
 }
 
-.portfolio-section[data-surface="créations"] {
-  --portfolio-card-bg: #fffdfa;
-  --portfolio-card-border: rgb(242 125 38 / 25%);
-  --portfolio-card-hover: #fff0df;
-  --portfolio-card-inset: #fff2e4;
-  background-color: #fff9f1;
-}
-
-.portfolio-section[data-surface="expériences"] {
-  --portfolio-card-bg: #fffefa;
-  --portfolio-card-border: rgb(23 23 23 / 14%);
-  --portfolio-card-hover: #fff2e3;
-  --portfolio-card-inset: #fff4e9;
-  background-color: #fffaf4;
-}
-
-.portfolio-section[data-surface="compétences"] {
-  --portfolio-card-bg: #fffdf9;
-  --portfolio-card-border: rgb(242 125 38 / 30%);
-  --portfolio-card-hover: #fff0df;
-  --portfolio-card-inset: #fff3e5;
-  background-color: #fff6ea;
-}
-
-.portfolio-section[data-surface="formation"] {
-  --portfolio-card-bg: #fffdfa;
-  --portfolio-card-border: rgb(23 23 23 / 14%);
-  --portfolio-card-hover: #fff2e3;
-  --portfolio-card-inset: #fff4e9;
-  background-color: #fff8ef;
-}
-
-.portfolio-section[data-surface="contact"] {
-  --portfolio-card-bg: #fffaf4;
-  --portfolio-card-border: rgb(242 125 38 / 34%);
-  --portfolio-card-hover: #ffedda;
-  --portfolio-card-inset: #fff0e1;
-  background-color: #fff0df;
+/* En-tête de section éditorial : index numéroté + libellé + filet */
+.section-index::before {
+  counter-increment: portfolio-section;
+  content: counter(portfolio-section, decimal-leading-zero);
+  color: var(--color-brand-orange);
 }
 
 .portfolio-card {
   border-color: var(--portfolio-card-border) !important;
   background-color: var(--portfolio-card-bg) !important;
   background-image: none !important;
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 80%) inset,
+    0 1px 2px rgb(60 40 20 / 4%);
   transition:
-    background-color 200ms ease,
-    border-color 200ms ease,
-    transform 200ms ease;
+    background-color 240ms ease,
+    border-color 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .portfolio-card__inset {
-  border-color: rgb(242 125 38 / 20%) !important;
+  border-color: rgb(26 24 20 / 6%) !important;
   background-color: var(--portfolio-card-inset) !important;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .portfolio-card:hover {
-    border-color: rgb(242 125 38 / 48%) !important;
+    border-color: rgb(226 105 31 / 30%) !important;
     background-color: var(--portfolio-card-hover) !important;
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 80%) inset,
+      0 18px 40px -24px rgb(122 58 16 / 35%);
+    transform: translateY(-2px);
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-card:hover {
+    transform: none;
+  }
+}
+
+/* ── Fond : lueur chaude + grain ────────────────────────────────────────── */
+.site-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 40rem at 85% -10%, rgb(226 105 31 / 9%), transparent 60%),
+    radial-gradient(50rem 36rem at -10% 30%, rgb(214 180 140 / 14%), transparent 65%),
+    #f7f5f1;
+}
+
+.site-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.font-serif-accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 .selection\:text-white::selection {
