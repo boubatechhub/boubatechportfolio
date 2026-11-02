@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AnimatePresence,
   motion,
   useMotionValueEvent,
   useScroll,
+  useSpring,
   useTransform,
   type MotionValue,
 } from 'motion/react';
@@ -23,19 +24,7 @@ type Row =
   | { kind: 'skill'; skill: Skill; groupIndex: number };
 
 /** Hauteur de scroll (en vh) consacrée au passage d'une ligne à la suivante. */
-const ROW_SCROLL_VH = 30;
-
-/**
- * Avance « cran par cran » : chaque compétence reste centrée pendant une partie
- * du scroll (palier), puis la liste glisse doucement vers la suivante.
- */
-function stepped(raw: number): number {
-  const base = Math.floor(raw);
-  const f = raw - base;
-  const HOLD = 0.3; // part du scroll où la ligne reste immobile, de chaque côté
-  const t = Math.min(1, Math.max(0, (f - HOLD) / (1 - 2 * HOLD)));
-  return base + t * t * (3 - 2 * t);
-}
+const ROW_SCROLL_VH = 13;
 
 function SkillIcon({ skill, className }: { skill: Skill; className: string }) {
   const [failed, setFailed] = useState(false);
@@ -84,7 +73,7 @@ function offsetAt(x: number): number {
   return Math.sign(x) * v;
 }
 
-function ScrollRow({
+const ScrollRow = memo(function ScrollRow({
   row,
   index,
   progress,
@@ -131,7 +120,7 @@ function ScrollRow({
       <span className="truncate">{row.skill.name}</span>
     </motion.li>
   );
-}
+});
 
 function SkillsScroller({ groups }: { groups: SkillGroup[] }) {
   const rows = useMemo<Row[]>(() => {
@@ -162,9 +151,14 @@ function SkillsScroller({ groups }: { groups: SkillGroup[] }) {
     offset: ['start start', 'end end'],
   });
   // On démarre sur la première compétence (ligne 1), pas sur le titre du catalogue.
-  const progress = useTransform(scrollYProgress, (v) =>
-    stepped(1 + v * (rows.length - 2)),
-  );
+  // Ressort léger : le mouvement suit le scroll de façon continue, sans à-coups.
+  const smooth = useSpring(scrollYProgress, {
+    stiffness: 220,
+    damping: 34,
+    mass: 0.35,
+    restDelta: 0.0005,
+  });
+  const progress = useTransform(smooth, (v) => 1 + v * (rows.length - 2));
 
   const [active, setActive] = useState(1);
   useMotionValueEvent(progress, 'change', (p) => {
