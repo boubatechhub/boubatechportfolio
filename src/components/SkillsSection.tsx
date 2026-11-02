@@ -23,7 +23,19 @@ type Row =
   | { kind: 'skill'; skill: Skill; groupIndex: number };
 
 /** Hauteur de scroll (en vh) consacrée au passage d'une ligne à la suivante. */
-const ROW_SCROLL_VH = 11;
+const ROW_SCROLL_VH = 30;
+
+/**
+ * Avance « cran par cran » : chaque compétence reste centrée pendant une partie
+ * du scroll (palier), puis la liste glisse doucement vers la suivante.
+ */
+function stepped(raw: number): number {
+  const base = Math.floor(raw);
+  const f = raw - base;
+  const HOLD = 0.3; // part du scroll où la ligne reste immobile, de chaque côté
+  const t = Math.min(1, Math.max(0, (f - HOLD) / (1 - 2 * HOLD)));
+  return base + t * t * (3 - 2 * t);
+}
 
 function SkillIcon({ skill, className }: { skill: Skill; className: string }) {
   const [failed, setFailed] = useState(false);
@@ -127,7 +139,9 @@ function SkillsScroller({ groups }: { groups: SkillGroup[] }) {
     offset: ['start start', 'end end'],
   });
   // On démarre sur la première compétence (ligne 1), pas sur le titre du catalogue.
-  const progress = useTransform(scrollYProgress, (v) => 1 + v * (rows.length - 2));
+  const progress = useTransform(scrollYProgress, (v) =>
+    stepped(1 + v * (rows.length - 2)),
+  );
   const listY = useTransform(progress, (p) => -p * rowH);
 
   const [active, setActive] = useState(1);
