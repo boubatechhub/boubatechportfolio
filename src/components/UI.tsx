@@ -46,15 +46,17 @@ export const Section = ({
       <div className={PAGE_CONTAINER_CLASS}>
         {(title || subtitle) && (
           <header
-            className={`mb-10 md:mb-12 xl:mb-14 2xl:mb-16 ${centerHeader ? "text-center" : "text-left"}`}
+            className={`mb-12 md:mb-16 xl:mb-20 ${centerHeader ? "text-center" : "text-left"}`}
           >
-            {subtitle && (
-              <p className="mb-2 block font-mono text-xs uppercase tracking-widest text-brand-orange">
-                {subtitle}
-              </p>
-            )}
+            <div
+              className={`mb-5 flex items-center gap-3 font-mono text-caption-sm uppercase tracking-[0.18em] text-white/50 md:mb-6 ${centerHeader ? "justify-center" : ""}`}
+            >
+              <span className="section-index tabular-nums" aria-hidden />
+              <span className="h-px w-8 bg-white/20" aria-hidden />
+              <span>{subtitle?.trim() ? subtitle : id.replace(/-/g, " ")}</span>
+            </div>
             {title && (
-              <h2 className="font-display text-3xl font-medium leading-tight tracking-tight md:text-4xl lg:text-5xl xl:text-display-md 2xl:text-6xl">
+              <h2 className="max-w-4xl font-display text-4xl font-medium leading-[1.02] tracking-[-0.035em] text-white md:text-5xl lg:text-6xl xl:text-[4.25rem]">
                 {title}
               </h2>
             )}
@@ -83,11 +85,11 @@ export const Button = ({
 }) => {
   const variants = {
     primary:
-      "bg-brand-orange text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed",
+      "border border-brand-orange bg-brand-orange text-[#fffefb] shadow-[0_8px_20px_-10px_rgb(226_105_31/70%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed",
     secondary:
       "bg-white text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed",
     outline:
-      "border border-white/35 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed",
+      "border border-white/15 bg-white/[0.02] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed",
   };
 
   return (
@@ -95,7 +97,7 @@ export const Button = ({
       onClick={onClick}
       type={type}
       disabled={disabled}
-      className={`site-button flex items-center justify-center gap-2 rounded-full px-8 py-4 font-medium transition-colors duration-300 ${variants[variant]} ${className}`}
+      className={`site-button flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-[0.95rem] font-medium tracking-[-0.01em] ${variants[variant]} ${className}`}
     >
       {children}
     </motion.button>
@@ -111,7 +113,7 @@ export const Badge = ({
   key?: string | number;
 }) => (
   <span
-    className={`inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-caption uppercase tracking-wider text-white/70 ${className}`}
+    className={`inline-flex items-center rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1 font-mono text-caption uppercase tracking-wider text-white/65 ${className}`}
   >
     {children}
   </span>

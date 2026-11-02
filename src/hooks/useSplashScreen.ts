@@ -21,7 +21,7 @@ export function useSplashScreen() {
   );
 
   const completeSplash = useCallback(() => {
-    localStorage.setItem(SPLASH_STORAGE_KEY, "1");
+    localStorage.setItem(SPLASH_STORAGE_KEY, "2");
     setShowSplash(false);
   }, []);
 

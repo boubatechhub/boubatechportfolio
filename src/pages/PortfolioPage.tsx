@@ -57,7 +57,15 @@ export function PortfolioPage() {
 
           <About settings={settings} />
 
-          <Section id="projets" subtitle=" " title="Mes projets web & mobile">
+          <Section
+            id="projets"
+            subtitle="Projets"
+            title={
+              <>
+                Projets web <span className="font-serif-accent text-brand-orange">&amp; mobile</span>
+              </>
+            }
+          >
             {projectsLoading ? (
               <div className="space-y-6">
                 <div
@@ -89,13 +97,13 @@ export function PortfolioPage() {
               />
             )}
             {!projectsLoading && !projectsError && projects.length > 0 ? (
-              <div className="mt-8 flex justify-center">
+              <div className="mt-12 flex justify-start">
                 <Link
                   to="/projets"
-                  className="site-button group inline-flex min-h-12 items-center gap-2 rounded-full border border-brand-orange bg-brand-orange px-6 py-3 font-mono text-xs uppercase tracking-[0.16em] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="site-button group inline-flex min-h-12 items-center gap-2.5 rounded-full border border-white/15 px-6 py-3 text-[0.95rem] font-medium tracking-[-0.01em] text-white"
                 >
                   Voir tous les projets
-                  <span className="text-white/75">({projects.length})</span>
+                  <span className="tabular-nums opacity-60">{projects.length}</span>
                   <ArrowUpRight
                     size={15}
                     className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
@@ -108,8 +116,12 @@ export function PortfolioPage() {
 
           <Section
             id="créations"
-            subtitle="UI/UX Gallery"
-            title="Designs UI/UX"
+            subtitle="Créations"
+            title={
+              <>
+                Designs <span className="font-serif-accent text-brand-orange">UI/UX</span>
+              </>
+            }
           >
             <CreationsGallery
               works={contentWorks}
@@ -119,8 +131,12 @@ export function PortfolioPage() {
 
           <Section
             id="expériences"
-            subtitle="Professionnelles"
-            title="Expériences"
+            subtitle="Expériences"
+            title={
+              <>
+                Expériences <span className="font-serif-accent text-brand-orange">professionnelles</span>
+              </>
+            }
           >
             <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2 xl:gap-10 2xl:gap-12">
               {experiences.map((exp, i) => (
@@ -131,7 +147,15 @@ export function PortfolioPage() {
 
           <SkillsSection groups={skills} />
 
-          <Section id="formation" subtitle="Parcours" title="Parcours">
+          <Section
+            id="formation"
+            subtitle="Formation"
+            title={
+              <>
+                Parcours <span className="font-serif-accent text-brand-orange">académique</span>
+              </>
+            }
+          >
             <div className="w-full">
               {education.map((edu, i) => (
                 <TimelineItem key={edu.id} education={edu} index={i} />
