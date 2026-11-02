@@ -34,20 +34,48 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 const navGroupClass =
-  "rounded-2xl border border-white/35 bg-white/[0.06] backdrop-blur-sm";
+  "rounded-full border border-white/10 bg-[#fffefb]/75 shadow-[0_8px_30px_-18px_rgb(60_40_20/35%)] backdrop-blur-md";
 
-const navSurfaceClass = "border-white/35 bg-white/[0.06] backdrop-blur-sm";
+const navSurfaceClass = "border-white/10 bg-[#fffefb]/75 backdrop-blur-md";
+
+/** Section actuellement visible, pour marquer le lien actif. */
+function useActiveSection(ids: string[]) {
+  const [active, setActive] = useState(ids[0]);
+  useEffect(() => {
+    const els = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+    if (els.length === 0 || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(visible.target.id);
+      },
+      { rootMargin: "-40% 0px -55% 0px", threshold: [0, 0.25, 0.5, 1] },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [ids.join("|")]);
+  return active;
+}
 
 type NavLinksGroupProps = {
   items: NavItem[];
   variant?: "desktop" | "mobile";
+  active?: string;
 };
 
-function NavLinksGroup({ items, variant = "desktop" }: NavLinksGroupProps) {
+function NavLinksGroup({
+  items,
+  variant = "desktop",
+  active,
+}: NavLinksGroupProps) {
   if (variant === "mobile") {
     return (
       <div
-        className={`mx-4 mb-4 flex w-[calc(100%-2rem)] items-stretch justify-between gap-0.5 p-1.5 shadow-2xl shadow-black ${navGroupClass}`}
+        className={`mx-4 mb-4 flex w-[calc(100%-2rem)] items-stretch justify-between gap-0.5 p-1.5 ${navGroupClass} !rounded-2xl`}
         role="navigation"
         aria-label="Navigation principale"
       >
@@ -55,10 +83,15 @@ function NavLinksGroup({ items, variant = "desktop" }: NavLinksGroupProps) {
           <a
             key={item.label}
             href={item.href}
-            className="flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-white/60 transition-colors hover:bg-white/[0.08] hover:text-white"
+            aria-current={active === item.href.slice(1) ? "true" : undefined}
+            className={`flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 transition-colors ${
+              active === item.href.slice(1)
+                ? "bg-[#1a1814] text-[#fffefb]"
+                : "text-white/55 hover:bg-white/[0.06] hover:text-white"
+            }`}
           >
-            <item.icon size={20} aria-hidden />
-            <span className="truncate font-mono text-2xs font-bold uppercase tracking-tighter">
+            <item.icon size={18} strokeWidth={1.75} aria-hidden />
+            <span className="truncate text-[0.65rem] font-medium tracking-tight">
               {item.label}
             </span>
           </a>
@@ -69,18 +102,22 @@ function NavLinksGroup({ items, variant = "desktop" }: NavLinksGroupProps) {
 
   return (
     <nav
-      className={`flex flex-wrap items-center justify-center divide-x divide-white/15 px-1 py-1.5 ${navGroupClass}`}
+      className={`flex flex-wrap items-center justify-center gap-0.5 p-1 ${navGroupClass}`}
       aria-label="Navigation principale"
     >
       {items.map((item) => (
-        <motion.a
+        <a
           key={item.label}
           href={item.href}
-          whileHover={{ y: -1 }}
-          className="rounded-none px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-white/70 transition-colors hover:bg-white/[0.08] hover:text-white first:rounded-l-xl last:rounded-r-xl"
+          aria-current={active === item.href.slice(1) ? "true" : undefined}
+          className={`rounded-full px-4 py-2 text-sm font-medium tracking-[-0.01em] transition-colors duration-200 ${
+            active === item.href.slice(1)
+              ? "bg-[#1a1814] text-[#fffefb]"
+              : "text-white/60 hover:bg-white/[0.05] hover:text-white"
+          }`}
         >
           {item.label}
-        </motion.a>
+        </a>
       ))}
     </nav>
   );
@@ -94,6 +131,15 @@ export function Navbar({ settings }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const logoSrc = getDirectImageUrl(settings.faviconUrl || "");
   const profileSrc = getProfileImageSrc(settings.profileImageUrl);
+  const active = useActiveSection(NAV_ITEMS.map((i) => i.href.slice(1)));
+  const displayName =
+    settings.name && settings.name !== "BT." ? settings.name : "Boubacar Traoré";
+  const initials = displayName
+    .split(/\s+/)
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -127,19 +173,22 @@ export function Navbar({ settings }: NavbarProps) {
       height={48}
     />
   ) : (
-    <div className="h-full w-full" />
+    <div className="flex h-full w-full items-center justify-center font-display text-sm font-semibold tracking-tight text-white">
+      {initials}
+      <span className="text-brand-orange">.</span>
+    </div>
   );
 
   const cvButtonClass =
-    "flex h-auto items-center gap-2 border-white/35 bg-white/[0.06] px-4 py-1.5 text-[10px] backdrop-blur-sm hover:border-white/55 hover:bg-white/[0.09]";
+    "flex h-auto items-center gap-2 border-white/10 bg-[#fffefb]/75 px-4 py-2 !text-sm backdrop-blur-md";
 
   return (
     <>
       <header
         className={`fixed left-0 top-0 z-50 hidden w-full transition-all duration-500 md:block ${
           isScrolled
-            ? `glass border-b py-4 xl:py-5 ${navSurfaceClass}`
-            : "bg-transparent py-6 xl:py-8"
+            ? "py-3 xl:py-4"
+            : "bg-transparent py-6 xl:py-7"
         }`}
       >
         <div
@@ -152,7 +201,7 @@ export function Navbar({ settings }: NavbarProps) {
           >
             <div className="flex items-center gap-3">
               <div
-                className={`h-12 w-12 overflow-hidden rounded-2xl border ${navSurfaceClass}`}
+                className={`h-11 w-11 overflow-hidden rounded-[14px] border ${navSurfaceClass}`}
               >
                 {logoImage}
               </div>
@@ -160,7 +209,7 @@ export function Navbar({ settings }: NavbarProps) {
             </div>
           </motion.div>
 
-          <NavLinksGroup items={NAV_ITEMS} variant="desktop" />
+          <NavLinksGroup items={NAV_ITEMS} variant="desktop" active={active} />
 
           <Button
             variant="outline"
@@ -172,8 +221,8 @@ export function Navbar({ settings }: NavbarProps) {
               )
             }
           >
-            <Download size={14} />
-            <span>CV</span>
+            <Download size={15} aria-hidden />
+            <span>Télécharger le CV</span>
           </Button>
         </div>
       </header>
@@ -181,7 +230,7 @@ export function Navbar({ settings }: NavbarProps) {
       <header
         className={`fixed left-0 top-0 z-50 w-full transition-all duration-300 md:hidden ${
           isScrolled
-            ? `glass border-b py-3 ${navSurfaceClass}`
+            ? "py-2.5"
             : "bg-transparent py-4"
         }`}
       >
@@ -190,7 +239,7 @@ export function Navbar({ settings }: NavbarProps) {
         >
           <div className="flex items-center gap-3">
             <div
-              className={`h-11 w-11 overflow-hidden rounded-2xl border ${navSurfaceClass}`}
+              className={`h-10 w-10 overflow-hidden rounded-[13px] border ${navSurfaceClass}`}
             >
               {logoImage}
             </div>
@@ -213,7 +262,7 @@ export function Navbar({ settings }: NavbarProps) {
       </header>
 
       <nav className="fixed bottom-0 left-0 z-50 w-full pb-safe md:hidden">
-        <NavLinksGroup items={NAV_ITEMS} variant="mobile" />
+        <NavLinksGroup items={NAV_ITEMS} variant="mobile" active={active} />
       </nav>
     </>
   );

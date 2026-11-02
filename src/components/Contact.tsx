@@ -115,10 +115,25 @@ export function Contact({ settings }: { settings: Settings }) {
   };
 
   return (
-    <Section id="contact" title="Prendre contact" centerHeader>
+    <Section
+      id="contact"
+      subtitle="Contact"
+      title={
+        <>
+          Construisons quelque chose{" "}
+          <span className="font-serif-accent text-brand-orange">ensemble.</span>
+        </>
+      }
+    >
       <div className="flex w-full flex-col items-stretch gap-10 sm:gap-12 lg:flex-row lg:items-start lg:gap-16 xl:gap-20 2xl:gap-24">
         <div className="flex w-full min-w-0 flex-1 flex-col gap-6 sm:gap-8 lg:max-w-none xl:max-w-[52rem]">
-          <div className="portfolio-card rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+          <a
+            href={`mailto:${CONTACT_DETAILS.email}`}
+            className="group inline-flex max-w-full items-center gap-3 break-all font-display text-2xl font-medium tracking-[-0.03em] text-white underline decoration-white/15 decoration-1 underline-offset-[10px] transition-colors hover:text-brand-orange hover:decoration-brand-orange md:text-4xl"
+          >
+            {CONTACT_DETAILS.email}
+          </a>
+          <div className="portfolio-card rounded-[1.5rem] border p-6 md:p-8">
             <h3 className="mb-1 font-display text-xl font-medium text-white md:text-2xl">
               Mes coordonnées
             </h3>
@@ -134,9 +149,9 @@ export function Contact({ settings }: { settings: Settings }) {
                       href={href}
                       className="group flex items-start gap-4 text-left transition-colors hover:text-brand-orange"
                     >
-                      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-colors group-hover:border-brand-orange/30 group-hover:bg-brand-orange/10 sm:h-16 sm:w-16">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] border border-white/[0.08] bg-[#f3efe8] transition-colors group-hover:border-brand-orange/30 group-hover:bg-brand-orange/10 ">
                         <Icon
-                          className="h-6 w-6 text-brand-orange sm:h-7 sm:w-7"
+                          className="h-[18px] w-[18px] text-brand-orange"
                           aria-hidden
                         />
                       </span>
@@ -151,9 +166,9 @@ export function Contact({ settings }: { settings: Settings }) {
                     </a>
                   ) : (
                     <div className="flex items-start gap-4">
-                      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 sm:h-16 sm:w-16">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] border border-white/[0.08] bg-[#f3efe8] ">
                         <Icon
-                          className="h-6 w-6 text-brand-orange sm:h-7 sm:w-7"
+                          className="h-[18px] w-[18px] text-brand-orange"
                           aria-hidden
                         />
                       </span>
@@ -172,7 +187,7 @@ export function Contact({ settings }: { settings: Settings }) {
             </ul>
 
             <nav
-              className="flex flex-col gap-3 border-t border-white/10 pt-6"
+              className="grid grid-cols-1 gap-4 border-t border-white/10 pt-6 sm:grid-cols-3"
               aria-label="Réseaux sociaux"
             >
               {CONTACT_SOCIALS.map(({ label, href, handle }) => {
@@ -187,9 +202,9 @@ export function Contact({ settings }: { settings: Settings }) {
                     whileHover={{ x: 4 }}
                     className="group flex items-center gap-4 text-white/70 transition-colors hover:text-brand-orange"
                   >
-                    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-colors group-hover:border-brand-orange/30 group-hover:bg-brand-orange/10 sm:h-16 sm:w-16">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] border border-white/[0.08] bg-[#f3efe8] transition-colors group-hover:border-brand-orange/30 group-hover:bg-brand-orange/10 ">
                       <Icon
-                        className="h-6 w-6 sm:h-7 sm:w-7"
+                        className="h-[18px] w-[18px]"
                         aria-hidden
                       />
                     </span>
@@ -215,7 +230,7 @@ export function Contact({ settings }: { settings: Settings }) {
         </div>
 
         <div className="flex w-full flex-1 items-center justify-center lg:sticky lg:top-28 lg:self-start xl:top-32">
-          <div className="portfolio-card relative aspect-[4/5] w-full max-w-[min(100%,280px)] overflow-hidden rounded-2xl border border-white/10 sm:max-w-[320px] lg:max-w-[360px] xl:max-w-[420px] 2xl:max-w-[480px]">
+          <div className="portfolio-card relative aspect-[4/5] w-full max-w-[min(100%,280px)] overflow-hidden rounded-[1.75rem] border sm:max-w-[320px] lg:max-w-[360px] xl:max-w-[420px] 2xl:max-w-[480px]">
             {profileSrc ? (
               <img
                 src={profileSrc}
