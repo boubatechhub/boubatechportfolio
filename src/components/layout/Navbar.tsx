@@ -39,12 +39,14 @@ const navGroupClass =
 const navSurfaceClass = "border-white/10 bg-[#fffefb]/75 backdrop-blur-md";
 
 /** Section actuellement visible, pour marquer le lien actif. */
-function useActiveSection(ids: string[]) {
-  const [active, setActive] = useState(ids[0]);
+function useActiveSection(initial: string) {
+  const [active, setActive] = useState(initial);
   useEffect(() => {
-    const els = ids
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => Boolean(el));
+    // On observe toutes les sections : une section hors menu (ex. compétences)
+    // désactive le lien précédent au lieu de le laisser actif.
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>("main section[id]"),
+    );
     if (els.length === 0 || typeof IntersectionObserver === "undefined") return;
     const io = new IntersectionObserver(
       (entries) => {
@@ -57,7 +59,7 @@ function useActiveSection(ids: string[]) {
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
-  }, [ids.join("|")]);
+  }, []);
   return active;
 }
 
@@ -131,7 +133,7 @@ export function Navbar({ settings }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const logoSrc = getDirectImageUrl(settings.faviconUrl || "");
   const profileSrc = getProfileImageSrc(settings.profileImageUrl);
-  const active = useActiveSection(NAV_ITEMS.map((i) => i.href.slice(1)));
+  const active = useActiveSection("accueil");
   const displayName =
     settings.name && settings.name !== "BT." ? settings.name : "Boubacar Traoré";
   const initials = displayName
