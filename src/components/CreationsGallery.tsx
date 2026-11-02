@@ -33,13 +33,15 @@ function CreationTile({
 
   return (
     <motion.article
-      initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
+      initial={
+        reduceMotion ? false : { clipPath: "inset(100% 0% 0% 0% round 12px)" }
+      }
+      whileInView={{ clipPath: "inset(0% 0% 0% 0% round 12px)" }}
+      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
       transition={{
-        duration: 0.35,
-        delay: reduceMotion ? 0 : Math.min(index * 0.04, 0.2),
-        ease: [0.22, 1, 0.36, 1],
+        duration: 0.95,
+        delay: reduceMotion ? 0 : (index % 4) * 0.09,
+        ease: [0.23, 1, 0.32, 1],
       }}
       className="portfolio-card group relative overflow-hidden rounded-xl border border-white/15 bg-white/[0.03] transition-[transform,border-color,background-color] duration-250 hover:-translate-y-0.5 hover:border-white/35"
     >
@@ -51,10 +53,14 @@ function CreationTile({
       >
         <div className="aspect-[4/5] overflow-hidden bg-black/35 sm:aspect-[3/4]">
           {cover && !imgError ? (
-            <img
+            <motion.img
               src={cover}
               alt={`Design UI/UX : ${work.title}`}
-              className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.04]"
+              initial={reduceMotion ? false : { scale: 1.18 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.3, ease: [0.23, 1, 0.32, 1] }}
+              className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:!scale-[1.04]"
               loading="lazy"
               decoding="async"
               referrerPolicy="no-referrer"

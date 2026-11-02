@@ -3,6 +3,7 @@ import { ReactNode, useEffect } from "react";
 import { X } from "lucide-react";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { PAGE_CONTAINER_CLASS, SECTION_PY_CLASS } from "../layout";
+import { DrawLine, MaskReveal } from "./Reveal";
 
 interface SectionProps {
   id: string;
@@ -24,24 +25,11 @@ export const Section = ({
   dark = false,
   centerHeader = false,
 }: SectionProps) => {
-  const reduceMotion = usePrefersReducedMotion();
-
   return (
-    <motion.section
+    <section
       id={id}
       data-surface={id}
       className={`portfolio-section ${SECTION_PY_CLASS} ${dark ? "bg-black/40" : "bg-transparent"} ${className}`}
-      initial={
-        reduceMotion
-          ? false
-          : { opacity: 0, transform: "translateY(14px)" }
-      }
-      whileInView={{ opacity: 1, transform: "translateY(0px)" }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{
-        duration: reduceMotion ? 0.18 : 0.6,
-        ease: [0.23, 1, 0.32, 1],
-      }}
     >
       <div className={PAGE_CONTAINER_CLASS}>
         {(title || subtitle) && (
@@ -52,19 +40,19 @@ export const Section = ({
               className={`mb-5 flex items-center gap-3 font-mono text-caption-sm uppercase tracking-[0.18em] text-white/50 md:mb-6 ${centerHeader ? "justify-center" : ""}`}
             >
               <span className="section-index tabular-nums" aria-hidden />
-              <span className="h-px w-8 bg-white/20" aria-hidden />
+              <DrawLine className="h-px w-8 bg-white/20" />
               <span>{subtitle?.trim() ? subtitle : id.replace(/-/g, " ")}</span>
             </div>
             {title && (
               <h2 className="max-w-4xl font-display text-4xl font-medium leading-[1.02] tracking-[-0.035em] text-white md:text-5xl lg:text-6xl xl:text-[4.25rem]">
-                {title}
+                <MaskReveal delay={0.08}>{title}</MaskReveal>
               </h2>
             )}
           </header>
         )}
         {children}
       </div>
-    </motion.section>
+    </section>
   );
 };
 

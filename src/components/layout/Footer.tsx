@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { PAGE_CONTAINER_CLASS } from "../../layout";
+import { Stagger, StaggerItem } from "../Reveal";
 import type { Settings } from "../../types";
 
 type FooterProps = {
@@ -9,10 +10,12 @@ type FooterProps = {
 export function Footer({ settings }: FooterProps) {
   return (
     <footer className="mb-24 border-t border-white/5 py-10 md:mb-0 md:py-12 xl:py-14">
-      <div
+      <Stagger
+        edge
+        gap={0.1}
         className={`${PAGE_CONTAINER_CLASS} flex w-full flex-col items-center justify-between gap-6 sm:gap-8 md:flex-row md:gap-8`}
       >
-        <div className="font-display text-xl font-bold tracking-tighter xl:text-2xl">
+        <StaggerItem className="font-display text-xl font-bold tracking-tighter xl:text-2xl">
           {settings.name.includes(".") ? (
             <>
               {settings.name.split(".")[0]}
@@ -21,21 +24,23 @@ export function Footer({ settings }: FooterProps) {
           ) : (
             settings.name
           )}
-        </div>
+        </StaggerItem>
 
-        <p className="text-center font-mono text-caption uppercase tracking-widest text-white/40 md:text-xs">
-          © 2026 — Conçu avec passion par {settings.name.replace(".", "")}
-        </p>
+        <StaggerItem>
+          <p className="text-center font-mono text-caption uppercase tracking-widest text-white/40 md:text-xs">
+            © 2026 — Conçu avec passion par {settings.name.replace(".", "")}
+          </p>
+        </StaggerItem>
 
-        <div className="flex items-center gap-6 md:gap-8">
+        <StaggerItem className="flex items-center gap-6 md:gap-8">
           <Link
             to="/confidentialite"
             className="font-mono text-caption uppercase tracking-widest text-white/40 transition-colors hover:text-white focus-visible:outline-none focus-visible:text-white"
           >
             Confidentialité
           </Link>
-        </div>
-      </div>
+        </StaggerItem>
+      </Stagger>
     </footer>
   );
 }
