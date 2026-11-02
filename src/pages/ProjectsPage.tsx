@@ -48,10 +48,15 @@ export function ProjectsPage() {
           <Section
             id="tous-les-projets"
             subtitle="Portfolio"
-            title="Tous les projets"
+            title={
+              <>
+                Tous les{" "}
+                <span className="font-serif-accent text-brand-orange">projets</span>
+              </>
+            }
             className="!mt-8 md:!mt-10"
           >
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-neutral-700 md:text-lg">
+            <p className="-mt-6 mb-12 max-w-2xl text-base leading-relaxed text-neutral-700 md:-mt-10 md:mb-14 md:text-lg">
               Applications, plateformes et expériences conçues du concept à la
               réalisation.
             </p>
@@ -61,7 +66,7 @@ export function ProjectsPage() {
               {Array.from({ length: 4 }, (_, index) => (
                 <div
                   key={index}
-                  className="aspect-[4/3] animate-pulse rounded-xl border border-orange-200 bg-orange-50"
+                  className="aspect-[4/3] animate-pulse rounded-xl border border-black/5 bg-[#efeae2]"
                   aria-hidden
                 />
               ))}
