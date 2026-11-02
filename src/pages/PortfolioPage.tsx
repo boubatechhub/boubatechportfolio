@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
-import { ExperienceItem, TimelineItem } from "../components/Cards";
+import { ExperienceItem } from "../components/Cards";
+import { JourneyRoad } from "../components/JourneyRoad";
 import { About } from "../components/About";
 import { Contact } from "../components/Contact";
 import { CreationsGallery } from "../components/CreationsGallery";
@@ -166,11 +167,7 @@ export function PortfolioPage() {
               </>
             }
           >
-            <div className="w-full">
-              {education.map((edu, i) => (
-                <TimelineItem key={edu.id} education={edu} index={i} />
-              ))}
-            </div>
+            <JourneyRoad education={education} />
           </Section>
 
           <Contact settings={settings} />
